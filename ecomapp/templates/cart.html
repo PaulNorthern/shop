@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <h3 class="text-center">Ваша корзина</h3>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <br>
 <table class="table">
     <tr>
         <td class="text-center">Товар</td>
         <td class="text-center">Кол-во</td>
         <td class="text-center">Цена</td>
+        <td class="text-center"></td>
         
     </tr>
     {% for item in cart.items.all %}
@@ -15,8 +17,32 @@
             <td class="text-center">{{ item.product.title }}</td>
             <td class="text-center">{{ item.qty }}</td>
             <td class="text-center">{{ item.item_total }}</td>
+            <td class="text-center"><a href="#" class="remove_from_card" data-slug='{{ item.product.slug }}'><button class="btn btn-danger">Удалить</button></a></td>
         </tr>
     {% endfor %}
 </table>
+<script>
+    // jQuery логика
+    $(document).ready(function(){
+        $('.remove_from_card').on('click', function(e){
+            e.preventDefault() // чтобы по умолчанию не делала того что должен делать (т.е клик)
+            product_slug = $(this).attr('data-slug') // по клику печатать слаг продукта
+            console.log(product_slug)
+            data = {
+                product_slug: product_slug
+            }
+            $.ajax({
+                type: "GET",
+                url: '{% url "remove_from_cart" %}',
+                data: data,
+                success: function(data){
+                   $("#cart_count").html(data.cart_total)
+                }
+            })
+
+        })
+    })
+  
+</script>
 
 {% endblock %}

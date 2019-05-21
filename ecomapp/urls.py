@@ -3,10 +3,11 @@ from django.urls import path
 from ecomapp.views import *
 
 urlpatterns = [
+    path('remove_from_cart/', remove_from_cart_view, name = 'remove_from_cart'),
     path('category/<str:category_slug>/', category_view, name='category_detail'),
     path('product/<str:product_slug>/', product_view, name='product_detail'),
     path('cart/', cart_view, name='cart'),
-    path('add_to_cart/<str:product_slug>', add_to_cart_view, name = 'add_to_cart'),
+    path('add_to_cart/', add_to_cart_view, name = 'add_to_cart'),
     url(r'^$', base_view, name='base'), # ^ - начало адрес и $ - конец адреса
   
 ]

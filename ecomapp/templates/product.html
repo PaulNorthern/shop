@@ -1,18 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="col-lg-4">
 <img src="{{ product.image.url }}" style="width: 80%; height: 250px;">
 </div>
-
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <div class="col-lg-8">
 <h3 class="text-center">{{ product.title }}</h3>
 <p>{% lorem %}</p>
 <p>{% lorem %}</p>
 <hr>
 <p style="font-size: 25px">Цена: <strong>{{ product.price }}</strong></p>
-<a href="{% url 'add_to_cart' product_slug=product.slug %}"><button class="btn btn-danger">Добавить в корзину</button></a>
+<a href="#" class="add_to_cart" data-slug='{{ product.slug }}'><button class="btn btn-danger">Добавить в корзину</button></a>
 <hr>
 </div>
+
+<script>
+    // jQuery логика
+    $(document).ready(function(){
+        $('.add_to_cart').on('click', function(e){
+            e.preventDefault() // чтобы по умолчанию не делала того что должен делать (т.е клик)
+            product_slug = $(this).attr('data-slug') // по клику печатать слаг продукта
+            data = {
+                product_slug: product_slug
+            }
+            $.ajax({
+                type: "GET",
+                url: '{% url "add_to_cart" %}',
+                data: data,
+                success: function(data){
+                   $("#cart_count").html(data.cart_total) // #cart_count - это корзина в базовом шаблоне
+                }
+            })
+        })
+    })
+  
+</script>
+
 
 {% endblock content %}
