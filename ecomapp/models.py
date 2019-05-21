@@ -58,3 +58,17 @@ class Product(models.Model):
     def get_absolute_url(self): #reverse будет генерить нам ссылку
         return reverse('product_detail', kwargs={'product_slug': self.slug})
 
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    qty = models.PositiveIntegerField(default=1) # кол-во
+    item_total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00) # менять кол-во предеметов
+
+    def __str__(self):
+        return "Cart item for product {0}".format(self.product.title)
+
+class Cart(models.Model):
+    items = models.ManyToManyField(CartItem, blank=True) # в корзину много предметов
+    cart_total = models.DecimalField(max_digits=9, decimal_places=2, default = 0.00) # итоговая сумма    
+
+    def __str__(self):
+        return  str(self.id)

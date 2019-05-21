@@ -24,7 +24,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Start Bootstrap</a>
+      <a class="navbar-brand" href="{% url 'base' %}">Django Shop</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -50,6 +50,9 @@
             </div>
           </li>
           {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'cart' %}">Корзина<span class='badge'>{{ cart.items.count }}</span></a></li>
         </ul>
       </div>
     </div>
