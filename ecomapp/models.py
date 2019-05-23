@@ -4,6 +4,7 @@ from django.utils.text import slugify
 #slugify - берет поле name и превращает его в slug, для валидации
 from transliterate import translit
 from django.urls import reverse #для создания ссылок на объекты
+from decimal import Decimal
 
 
 class Category(models.Model):
@@ -89,3 +90,22 @@ class Cart(models.Model):
                 cart.items.remove(cart_item)
                 cart.save()
 
+    def change_qty(self, qty, item_id):
+        cart = self
+        cart_item = CartItem.objects.get(id=int(item_id))
+        cart_item.qty = int(qty)
+        cart_item.item_total = int(qty) * Decimal(cart_item.product.price)
+        cart_item.save()
+        new_cart_total = 0.00
+        for item in cart.items.all():
+            new_cart_total += float(item.item_total)
+        cart.cart_total = new_cart_total
+        cart.save()
+
+
+ORDER_STATUS_CHOICES = {
+    ('Принят в обработку', ' Принят в обработку'), ('Выполняется', 'Выполняется'), ('Оплачено', 'Оплачено')
+}
+
+# class Order(models.Model):
+#     user = 
