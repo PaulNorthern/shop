@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from transliterate import translit
 from django.urls import reverse #для создания ссылок на объекты
 from decimal import Decimal
-
+from django.conf import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -107,5 +107,18 @@ ORDER_STATUS_CHOICES = {
     ('Принят в обработку', ' Принят в обработку'), ('Выполняется', 'Выполняется'), ('Оплачено', 'Оплачено')
 }
 
-# class Order(models.Model):
-#     user = 
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    items = models.ManyToManyField(Cart)
+    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=255)
+    buying_type = models.CharField(max_length=255, choices=(('Самовывоз','Самовывоз'), ('Доставка', 'Доставка' )), default='Самовывоз')
+    data = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField()
+    staus = models.CharField(max_length=100, choices = ORDER_STATUS_CHOICES)
+
+    def __str__(self):
+        return "Заказ №{0}".format(str(self.id))
