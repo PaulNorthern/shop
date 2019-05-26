@@ -40,10 +40,15 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
+              <a class="nav-link" href="{% url 'login' %}">Войти
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'registration' %}">Регистрация
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
           {% if not request.get_full_path == '/' %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
