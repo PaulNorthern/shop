@@ -14,6 +14,7 @@ urlpatterns = [
     path('order/', order_create_view, name='create_order'),
     path('make_order/', make_order_view, name = 'make_order'),
     path('thank_you/', TemplateView.as_view(template_name='thank_you.html'), name='thank_you'),
+    path('account', account_view, name='account'),
     url(r'^$', base_view, name='base'), # ^ - начало адрес и $ - конец адреса
   
 ]

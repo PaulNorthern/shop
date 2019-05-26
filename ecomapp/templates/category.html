@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+
 <div class="col-sm-12">
     <h2>{{ category.name }}</h2>
     <hr>
@@ -9,8 +10,37 @@
         <img src="{{ product.image.url }}" style="width: 100%; height: 300px;">
         <h4 class="text-center">{{ product.title }}</h4>
         <p class="text-center" style="font-size: 25px">Цена: <strong>{{ product.price }}</strong></p>
-        <p class="text-center"><a href="#"><button class="btn btn-danger">Добавить в корзину</button></a></p> 
+        {% if request.user.is_authenticated %}
+            <p class="text-center"><a href="#" class="add_to_cart" data-slug='{{ product.slug }}'><button class="btn btn-danger">Добавить в корзину</button></a></p>
+        {% else %}
+            <p class="text-center">Заказывать товар могут только авторизированные пользователи.</p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
+ 
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script>
+        // jQuery логика
+        $(document).ready(function(){
+            $('.add_to_cart').on('click', function(e){
+                e.preventDefault() // чтобы по умолчанию не делала того что должен делать (т.е клик)
+                product_slug = $(this).attr('data-slug') // по клику печатать слаг продукта
+                data = {
+                    product_slug: product_slug
+                }
+                $.ajax({
+                    type: "GET",
+                    url: '{% url "add_to_cart" %}',
+                    data: data,
+                    success: function(data){
+                       $("#cart_count").html(data.cart_total) // #cart_count - это корзина в базовом шаблоне
+                    }
+                })
+            })
+        })
+      
+    </script>
+    
 {% endblock content %}

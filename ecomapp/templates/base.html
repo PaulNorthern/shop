@@ -25,6 +25,15 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="{% url 'base' %}">Django Shop</a>
+      {% if not request.user.is_authenticated %}
+      
+        <p class="navbar-text mb-0 ">Здравствуй, гость</p>
+      
+      {% else %}
+      
+        <p class="navbar-text mb-0 ">Здравствуй, {{request.user }}</p>
+        <p class="navbar-text mb-0 ml-3"><a href="{% url 'account' %}">Личный кабинет</a></p>
+      {% endif %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -50,8 +59,9 @@
             </div>
           </li>
           {% endif %}
+         
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right"></ul>
             <li><a href="{% url 'cart' %}">Корзина<span class='badge' id="cart_count">{% if not request.session.total %} 
             0 {% else %} {{request.session.total}} {% endif %} </span></a></li>
             <!-- {{ cart.items.count }} -->
@@ -126,6 +136,11 @@
                 <p class="card-text">{{product.description}}</p>
               </div>
               <div class="card-footer">
+                {% if request.user.is_authenticated %}
+                <p class="text-center"><a href="#" class="add_to_cart" data-slug='{{ product.slug }}'><button class="btn btn-danger">Добавить в корзину</button></a></p>
+                {% else %}
+                <p class="text-center">Заказывать товар могут только авторизированные пользователи.</p>
+                {% endif %} 
                 <!-- <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small> -->
               </div>
             </div>
@@ -157,7 +172,29 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
- 
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script>
+      // jQuery логика
+      $(document).ready(function(){
+          $('.add_to_cart').on('click', function(e){
+              e.preventDefault() // чтобы по умолчанию не делала того что должен делать (т.е клик)
+              product_slug = $(this).attr('data-slug') // по клику печатать слаг продукта
+              data = {
+                  product_slug: product_slug
+              }
+              $.ajax({
+                  type: "GET",
+                  url: '{% url "add_to_cart" %}',
+                  data: data,
+                  success: function(data){
+                     $("#cart_count").html(data.cart_total) // #cart_count - это корзина в базовом шаблоне
+                  }
+              })
+          })
+      })
+    
+  </script>
+    
 </body>
 
 </html>

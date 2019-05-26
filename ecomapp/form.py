@@ -3,6 +3,8 @@ from django.utils import timezone
 
 
 
+
+
 class OrderForm(forms.Form):
     name = forms.CharField()
     last_name = forms.CharField(required=False)
@@ -24,3 +26,4 @@ class OrderForm(forms.Form):
         self.fields['comments'].label = 'Комментарий к заказу'
         self.fields['date'].label = 'Дата доставки'
         self.fields['date'].help_text = 'Доставка осущ-ся на след день после оформления заказа'
+    

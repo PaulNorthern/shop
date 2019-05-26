@@ -204,3 +204,9 @@ def make_order_view(request):
         del request.session['total']
         return HttpResponseRedirect(reverse('thank_you'))
 
+def account_view(request):
+    order = Order.objects.filter(user=request.user).order_by('-id')
+    context = {
+        'order' : order 
+    }
+    return render(request, 'account.html', context)
