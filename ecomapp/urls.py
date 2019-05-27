@@ -17,6 +17,7 @@ urlpatterns = [
     path('account', account_view, name='account'),
     path('registration/', registration_view, name="registration"),
     path('login/', login_view, name="login"),
+    path('logout/', logout_view, name='logout'),
     url(r'^$', base_view, name='base'), # ^ - начало адрес и $ - конец адреса
   
 ]
